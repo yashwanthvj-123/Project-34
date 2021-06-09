@@ -1,226 +1,223 @@
 
-const engine = Matter.Engine;
-const world  = Matter.World;
-const bodies = Matter.Bodies;
+var PLAY = 1;
+var END = 0;
+var gameState = PLAY;
 
-var myengine,myworld;
+var trex, trex_running, trex_collided;
+var ground, invisibleGround, groundImage;
 
-var bg;
+var cloudsGroup, cloudImage;
+var obstaclesGroup, obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6;
 
-var gameState = "onSling";
+var score=0;
 
-var ground;
+var gameOver, restart;
 
-var hero;
+var music1,music2,music3;
 
-var rope;
+localStorage["HighestScore"] = 0;
 
-var monster;
-
-var box1;
-
-function preload () {
-
-  bg = loadImage ("bg.png");
-
-}
-
-function setup () {
-
-  createCanvas(1270,600);
-
-  myengine = engine.create ();
-  myworld  = myengine.world;
-
-  ground   = new Ground (350,550,1270,8);
-
-  hero     = new Hero (200,600);
-
-  rope     = new Rope (hero.body, {x:250,y:0} );
-
-  monster  = new Monster (1080,450);
-
-  box1     = new Box (550,500);
-  box2     = new Box (550,450);
-  box3     = new Box (550,400);
-  box4     = new Box (550,350);
-  box5     = new Box (550,300);
-  box6     = new Box (550,250);
-  box7     = new Box (550,200);
-  box8     = new Box (550,150);
-  box9     = new Box (550,100);
-  box10    = new Box (550,50);
-
-  box11    = new Box (620,500);
-  box12    = new Box (620,450);
-  box13    = new Box (620,400);
-  box14    = new Box (620,350);
-  box15    = new Box (620,300);
-  box16    = new Box (620,250);
-
-  box17    = new Box (690,500);
-  box18    = new Box (690,450);
-  box19    = new Box (690,400);
-  box20    = new Box (690,350);
-  box21    = new Box (690,300);
-  box22    = new Box (690,250);
-  box23    = new Box (690,200);
-  box24    = new Box (690,150);
-  box25    = new Box (690,100);
-  box26    = new Box (690,50);
-
-  box27    = new Box (760,500);
-  box28    = new Box (760,450);
-  box29    = new Box (760,400);
-  box30    = new Box (760,350);
-  box31    = new Box (760,300);
-  box32    = new Box (760,250);
-
-  box33    = new Box (830,500);
-  box34    = new Box (830,450);
-  box35    = new Box (830,400);
-  box36    = new Box (830,350);
-  box37    = new Box (830,300);
-  box38    = new Box (830,250);
-  box39    = new Box (830,200);
-  box40    = new Box (830,150);
-  box41    = new Box (830,100);
-  box42    = new Box (830,50);
-
-}
-
-function draw () {
-
-  background(bg);
+function preload(){
+  trex_running =   loadAnimation("trex1.png","trex3.png","trex4.png");
+  trex_collided = loadAnimation("trex_collided.png");
   
-  engine.update (myengine);
+  groundImage = loadImage("ground2.png");
+  
+  cloudImage = loadImage("cloud.png");
+  
+  obstacle1 = loadImage("obstacle1.png");
+  obstacle2 = loadImage("obstacle2.png");
+  obstacle3 = loadImage("obstacle3.png");
+  obstacle4 = loadImage("obstacle4.png");
+  obstacle5 = loadImage("obstacle5.png");
+  obstacle6 = loadImage("obstacle6.png");
+  
+  gameOverImg = loadImage("gameOver.png");
+  restartImg = loadImage("restart.png");
 
-  ground.display ();
-
-  hero.display ();
-
-  rope.display ();
-
-  monster.display ();
-
-  box1.display ();
-  box2.display ();
-  box3.display ();
-  box4.display ();
-  box5.display ();
-  box6.display ();
-  box7.display ();
-  box8.display ();
-  box9.display ();
-  box10.display ();
-  box11.display ();
-  box12.display ();
-  box13.display ();
-  box14.display (); 
-  box15.display ();
-  box16.display ();
-  box17.display ();
-  box18.display ();
-  box19.display ();
-  box20.display ();
-  box21.display ();
-  box22.display ();
-  box23.display ();
-  box24.display ();
-  box25.display ();
-  box26.display ();
-  box27.display ();
-  box28.display ();
-  box29.display ();
-  box30.display ();
-  box31.display ();
-  box32.display ();
-  box33.display ();
-  box34.display ();
-  box35.display ();
-  box36.display ();
-  box37.display ();
-  box38.display ();
-  box39.display ();
-  box40.display ();
-  box41.display ();
-  box42.display ();
-
-  detectCollision (monster,box1);
-  detectCollision (monster,box2);
-  detectCollision (monster,box3);
-  detectCollision (monster,box4);
-  detectCollision (monster,box5);
-  detectCollision (monster,box6);
-  detectCollision (monster,box7);
-  detectCollision (monster,box8);
-  detectCollision (monster,box9);
-  detectCollision (monster,box10);
-
-  detectCollision (monster,box11);
-  detectCollision (monster,box12);
-  detectCollision (monster,box13);
-  detectCollision (monster,box14);
-  detectCollision (monster,box15);
-  detectCollision (monster,box16);
-  detectCollision (monster,box17);
-  detectCollision (monster,box18);
-  detectCollision (monster,box19);
-  detectCollision (monster,box20);
-
-  detectCollision (monster,box21);
-  detectCollision (monster,box22);
-  detectCollision (monster,box23);
-  detectCollision (monster,box24);
-  detectCollision (monster,box25);
-  detectCollision (monster,box26);
-  detectCollision (monster,box27);
-  detectCollision (monster,box28);
-  detectCollision (monster,box29);
-  detectCollision (monster,box30);
-
-  detectCollision (monster,box31);
-  detectCollision (monster,box32);
-  detectCollision (monster,box33);
-  detectCollision (monster,box34);
-  detectCollision (monster,box35);
-  detectCollision (monster,box36);
-  detectCollision (monster,box37);
-  detectCollision (monster,box38);
-  detectCollision (monster,box39);
-  detectCollision (monster,box40);
-
-  detectCollision (monster,box41);
-  detectCollision (monster,box42);
-
+  music1=loadSound ("jump.mp3");
+  music2=loadSound ("die.mp3");
+  music3=loadSound ("checkPoint.mp3");
 }
 
-function mouseDragged () {
+function setup() {
+  createCanvas(600, 200);
+  
+  trex = createSprite(50,180,20,50);
+  
+  trex.addAnimation("running", trex_running);
+  trex.addAnimation("collided", trex_collided);
+  trex.scale = 0.5;
+  
+  ground = createSprite(200,180,400,20);
+  ground.addImage("ground",groundImage);
+  ground.x = ground.width /2;
+  ground.velocityX = -(6 + 3*score/100);
+  
+  gameOver = createSprite(300,100);
+  gameOver.addImage(gameOverImg);
+  
+  restart = createSprite(300,140);
+  restart.addImage(restartImg);
+  
+  gameOver.scale = 0.5;
+  restart.scale = 0.5;
 
-  if (gameState!=="launched") {
-    Matter.Body.setPosition (hero.body,{x:mouseX,y:mouseY});
+  gameOver.visible = false;
+  restart.visible = false;
+  
+  cloudsGroup = new Group();
+  obstaclesGroup = new Group();
+  
+  score = 0;
+}
+
+function draw() {
+  //trex.debug = true;
+  background(255);
+
+  text("Score: "+ score, camera.position.x+230,50);
+
+  trex.x=camera.position.x-250;
+  
+  if (gameState===PLAY){
+
+    camera.position.x+=6;
+    score = score + Math.round(getFrameRate()/60);
+    if(camera.position.x>ground.width/2+300)
+    {
+      camera.position.x=300;
+      obstaclesGroup.destroyEach();
+      cloudsGroup.destroyEach();
+      ground.velocityX = -(6 + 3*score/100);
+    }
+    
+    trex.velocityY=0;
+
+    text("HighScore: "+ localStorage["HighestScore"], camera.position.x-200,50);
+  
+    if(keyDown("space") && trex.y >= 130) {
+      trex.velocityY = -112;
+      music1.play ();
+    }
+  
+  if (score>0 && score%100 === 0){
+      music3.play();
   }
 
+    trex.velocityY = trex.velocityY + 0.8
+  
+    trex.collide(ground);
+    spawnClouds();
+    spawnObstacles();
+  
+    if(obstaclesGroup.isTouching(trex)){
+        gameState = END;
+        music2.play ();
+    }
+  }
+  else if (gameState === END) {
+    gameOver.visible = true;
+    restart.visible = true;
+    
+    gameOver.x=camera.position.x;
+    restart.x=camera.position.x;
+
+    //set velcity of each game object to 0
+    ground.velocityX = 0;
+    trex.velocityY = 0;
+    obstaclesGroup.setVelocityXEach(0);
+    cloudsGroup.setVelocityXEach(0);
+    
+    //change the trex animation
+    trex.changeAnimation("collided",trex_collided);
+    
+    //set lifetime of the game objects so that they are never destroyed
+    obstaclesGroup.setLifetimeEach(-1);
+    cloudsGroup.setLifetimeEach(-1);
+    
+    if(mousePressedOver(restart)) {
+      reset();
+    }
+  }
+  
+  
+  drawSprites();
+  
+  
+  
 }
 
-function mouseReleased () {
-
-  gameState="launched";
-  rope.fly ();
-
+function spawnClouds() {
+  //write code here to spawn the clouds
+  if (frameCount % 60 === 0) {
+    var cloud = createSprite(camera.position.x+300,120,40,10);
+    cloud.y = Math.round(random(80,120));
+    cloud.addImage(cloudImage);
+    cloud.scale = 0.5;
+    cloud.velocityX = -3;
+    
+     //assign lifetime to the variable
+    cloud.lifetime = 200;
+    
+    //adjust the depth
+    cloud.depth = trex.depth;
+    trex.depth = trex.depth + 1;
+    
+    //add each cloud to the group
+    cloudsGroup.add(cloud);
+  }
+  
 }
 
-function detectCollision (lmonster,lbox) {
+function spawnObstacles() {
+  if(frameCount % 60 === 0) {
+    var obstacle = createSprite(camera.position.x+300,165,10,40);
+    //obstacle.debug = true;
+    obstacle.velocityX = -(6 + 3*score/100);
+    
+    //generate random obstacles
+    var rand = Math.round(random(1,6));
+    switch(rand) {
+      case 1: obstacle.addImage(obstacle1);
+              break;
+      case 2: obstacle.addImage(obstacle2);
+              break;
+      case 3: obstacle.addImage(obstacle3);
+              break;
+      case 4: obstacle.addImage(obstacle4);
+              break;
+      case 5: obstacle.addImage(obstacle5);
+              break;
+      case 6: obstacle.addImage(obstacle6);
+              break;
+      default: break;
+    }
+    
+    //assign scale and lifetime to the obstacle           
+    obstacle.scale = 0.5;
+    obstacle.lifetime = 300;
+    //add each obstacle to the group
+    obstaclesGroup.add(obstacle);
+  }
+}
 
-	monsterBodyPosition=lmonster.body.position;
-	boxBodyPosition=lbox.body.position;
-
-	var distance = dist (monsterBodyPosition.x,monsterBodyPosition.y,boxBodyPosition.x,boxBodyPosition.y);
-
-	if (distance<= lbox.width + lmonster.radius ) {
-
-		Matter.Body.setStatic (lmonster.body, false);
-
-	}
-
+function reset(){
+  gameState = PLAY;
+  gameOver.visible = false;
+  restart.visible = false;
+  
+  obstaclesGroup.destroyEach();
+  cloudsGroup.destroyEach();
+  
+  trex.changeAnimation("running",trex_running);
+  
+  if(localStorage["HighestScore"]<score){
+    localStorage["HighestScore"] = score;
+  }
+  
+  camera.position.x=300;
+  
+  score = 0;
+  
 }
